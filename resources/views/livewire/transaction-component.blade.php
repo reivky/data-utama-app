@@ -80,6 +80,7 @@
                                                     <select wire:model="product_id" class="form-select"
                                                         aria-label="Default select example">
                                                         @if ($products)
+                                                            <option selected>-- Choose --</option>
                                                             @foreach ($products as $product)
                                                                 <option value="{{ $product->id }}">{{ $product->name }}
                                                                 </option>
@@ -91,11 +92,6 @@
                                                     <label for="quantity" class="form-label">Quantity</label>
                                                     <input type="number" class="form-control" wire:model="quantity"
                                                         id="quantity" required>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label for="stock" class="form-label">Reference No</label>
-                                                    <input type="number" class="form-control" wire:model="reference_no"
-                                                        id="stock" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,8 +122,8 @@
                                         Are you sure?
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" wire:click.prevent="cancel()"
-                                            class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="button" wire:click.prevent="cancel()" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" wire:click.prevent="destroy()" data-bs-dismiss="modal"
                                             class="btn btn-danger">Yes, delete</button>
                                     </div>

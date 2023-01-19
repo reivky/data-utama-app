@@ -3,8 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Models\Product;
-use App\Models\Transaction;
 use Livewire\Component;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 use Livewire\WithPagination;
 
 class TransactionComponent extends Component
@@ -26,19 +27,27 @@ class TransactionComponent extends Component
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $rules = [
-            'name' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'description' => 'required',
-        ];
-        $validatedDate = $this->validate($rules);
-        Product::create($validatedDate);
-        session()->flash('success', 'Pengajar baru berhasil ditambahkan');
-        $this->resetInputFields();
-        $this->emit('userStore'); // Close model to using to jquery
+        // dd($this->product_id);
+        if ($this->product_id && $this->quantity) {
+            $product = Product::where('id', $this->product_id)->first();
+            $client = new \GuzzleHttp\Client();
+            $response = $client->post('https://sandbox.saebo.id/api/v1/transactions', [
+                'headers' => [
+                    'X-API-KEY' => 'DATAUTAMA',
+                ],
+                'form_params' => [
+                    'quantity' => $this->quantity,
+                    'price' => $product->price,
+                    'payment_amount' => $this->quantity * $product->price,
+                ]
+            ]);
+            $response_data = json_decode($response->getBody()->getContents());
+            dd($response_data);
+            // $result = $response->getBody()->getContents();
+            $this->reference_no = $response_data->data->reference_no;
+        }
     }
 
     public function delete($id)

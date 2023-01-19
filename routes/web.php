@@ -23,3 +23,4 @@ Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('home')->middleware('auth');
 Route::get('/transactions', [App\Http\Controllers\TransactionController::class, 'index'])->middleware('auth');
+Route::post('/apis', [App\Http\Controllers\HomeController::class, 'store']);
