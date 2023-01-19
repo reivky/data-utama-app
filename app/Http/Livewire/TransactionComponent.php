@@ -29,7 +29,6 @@ class TransactionComponent extends Component
 
     public function store(Request $request)
     {
-        // dd($this->product_id);
         if ($this->product_id && $this->quantity) {
             $product = Product::where('id', $this->product_id)->first();
             $client = new \GuzzleHttp\Client();
@@ -44,9 +43,16 @@ class TransactionComponent extends Component
                 ]
             ]);
             $response_data = json_decode($response->getBody()->getContents());
-            dd($response_data);
-            // $result = $response->getBody()->getContents();
             $this->reference_no = $response_data->data->reference_no;
+            Transaction::create([
+                'reference_no' => $this->reference_no,
+                'price' => $product->price,
+                'quantity' => $this->quantity,
+                'payment_amount' => $this->quantity * $product->price,
+                'product_id' => $this->product_id,
+            ]);
+            $this->resetInputFields();
+            $this->emit('userStore'); // Close model to using to jquery
         }
     }
 
