@@ -29,6 +29,7 @@ class TransactionComponent extends Component
 
     public function store(Request $request)
     {
+        // dd($this->product_id);
         if ($this->product_id && $this->quantity) {
             $product = Product::where('id', $this->product_id)->first();
             $client = new \GuzzleHttp\Client();
@@ -49,7 +50,7 @@ class TransactionComponent extends Component
                 'price' => $product->price,
                 'quantity' => $this->quantity,
                 'payment_amount' => $this->quantity * $product->price,
-                'product_id' => $this->product_id,
+                'product_id' => $product->id,
             ]);
             $this->resetInputFields();
             $this->emit('userStore'); // Close model to using to jquery
